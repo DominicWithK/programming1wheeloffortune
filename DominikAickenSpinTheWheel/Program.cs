@@ -25,10 +25,15 @@ namespace DominikAickenSpinTheWheel
                 contestants[count].score = Convert.ToInt32(reader.ReadLine().Trim());
                 count++;
             }
-            //Bubble sort by last name
-            for (int i = 0; i < contestants.Length - 1; i++)
+            BubbleSort(ref contestants, count);
+            //Start with main menu
+            MainMenu(count, contestants);
+        }
+        static void BubbleSort(ref Contestant[] contestants, int count)     //Sorts by last name
+        {
+            for (int i = 0; i < count - 1; i++)
             {
-                for (int j = 0; j < contestants.Length - 1 - i; j++)
+                for (int j = 0; j < count - 1 - i; j++)
                 {
                     if (contestants[j].lastname.CompareTo(contestants[j + 1].lastname) > 0)
                     {
@@ -38,8 +43,6 @@ namespace DominikAickenSpinTheWheel
                     }
                 }
             }
-            //Start with main menu
-            MainMenu(count, contestants);
         }
         static void MainMenu(int count, Contestant[] contestants)
         {
@@ -66,6 +69,9 @@ namespace DominikAickenSpinTheWheel
                     ContestantMenu(count, contestants);
                     break;
                 case '0':
+                    Console.WriteLine();
+                    Console.WriteLine("Thank you for playing!");
+                    Thread.Sleep(1500);
                     break;
                 default:
                     InvalidInput();
@@ -76,9 +82,11 @@ namespace DominikAickenSpinTheWheel
         static void Instructions(int count, Contestant[] contestants)
         {
             Console.Clear();
-            Console.WriteLine("HOW TO PLAY: Wheel of Fortune Game Show");
+            Console.WriteLine("!*!*!*!*! Wheel of Fortune Game Show !*!*!*!*!");
             Console.WriteLine();
-            Console.WriteLine($"CONTESTANTS:\nUpon pressing play, you play as one of {count} contestants. You can view/edit contestant information in the 'Contestants' section." +
+            Console.WriteLine("[ Instructions ] ".PadLeft(15));
+            Console.WriteLine();
+            Console.WriteLine($"CONTESTANTS:\nUpon pressing play, you play as one of {count} contestants. You can view/edit contestant information in the 'Contestants' menu." +
                 "\n10 contestants are randomly selected as finalists and 1 from the selected 10 will move forward to contend." +
                 "\n\nINSTRUCTIONS:\nYou have to guess a randomly selected word. Each letter has been blanked out." +
                 "\nEvery turn, you spin a wheel with 24 segments. 22 of these segments contain cash prizes ranging from $300 to $5000. 2 segments are penalties of -$2000 and -$3000." +
@@ -108,6 +116,7 @@ namespace DominikAickenSpinTheWheel
             switch (keyChar)
             {
                 case '1':
+                    BubbleSort(ref contestants, count);
                     ShowContestants(count, contestants);
                     break;
                 case '2':
@@ -130,45 +139,115 @@ namespace DominikAickenSpinTheWheel
             Console.WriteLine();
             Console.WriteLine("[ Contestant Menu ] ".PadLeft(15));
             Console.WriteLine();
-            Console.WriteLine("Search by first or last name:");
+            Console.WriteLine("Search by first/last name or leave blank to return");
             Console.WriteLine();
             Console.Write(">");
             string wanted = Console.ReadLine().ToLower().Trim();
             //Search
-            for (int i = 0; i < contestants.Length; i++)
+            if (string.IsNullOrWhiteSpace(wanted))
             {
-                if (contestants[i].firstname.ToLower().Trim() == wanted || contestants[i].lastname.ToLower().Trim() == wanted)
+                ContestantMenu(count, contestants);
+            }
+            else
+            {
+                for (int i = 0; i < count; i++)
                 {
-                    found = true;
-                    Console.Clear();
-                    Console.WriteLine("!*!*!*!*! Wheel of Fortune Game Show !*!*!*!*!");
-                    Console.WriteLine();
-                    Console.WriteLine("[ Contestant Menu ] ".PadLeft(15));
-                    Console.WriteLine();
-                    Console.WriteLine($"Selected contestant: {contestants[i].firstname} {contestants[i].lastname}");
-                    Console.WriteLine();
-                    Console.WriteLine($"Interest: {contestants[i].interest,-30} Score: {contestants[i].score}");
-                    Console.WriteLine("1. Edit First Name\n2. Edit Last Name\n3. Edit Interest\n4. Reset Score\n0. Back");
-                    Console.Write(">");
-                    ConsoleKeyInfo keyInfo = Console.ReadKey();
-                    char keyChar = keyInfo.KeyChar;
-                    ConsoleKey key = keyInfo.Key;
-                    switch (keyChar)
+                    if (contestants[i].firstname.ToLower().Trim() == wanted || contestants[i].lastname.ToLower().Trim() == wanted)
                     {
-                        case '1':
-
+                        found = true;
+                        int chosen = i;
+                        ChosenContestant(count, chosen, contestants);
                     }
                 }
-            }
-            if (found == false)
-            {
-                Console.WriteLine();
-                Console.Write("Contestant not found. ENTER to return");
-                Console.ReadLine();
-                EditContestant(count, contestants);
+                if (found == false)
+                {
+                    Console.WriteLine();
+                    Console.Write("Contestant not found. ENTER to return");
+                    Console.ReadLine();
+                    EditContestant(count, contestants);
+                }
             }
         }
-        static void EditFirstName(int count, Contestant[] contestants)
+        static void ChosenContestant(int count, int chosen, Contestant[] contestants)
+        {
+            Console.Clear();
+            Console.WriteLine("!*!*!*!*! Wheel of Fortune Game Show !*!*!*!*!");
+            Console.WriteLine();
+            Console.WriteLine("[ Contestant Menu ] ".PadLeft(15));
+            Console.WriteLine();
+            Console.WriteLine($"Selected contestant: {contestants[chosen].firstname} {contestants[chosen].lastname}");
+            Console.WriteLine();
+            Console.WriteLine($"Interest: {contestants[chosen].interest,-30} Score: {contestants[chosen].score}");
+            Console.WriteLine();
+            Console.WriteLine("1. Edit First Name\n2. Edit Last Name\n3. Edit Interest\n4. Reset Score\n0. Back");
+            Console.WriteLine();
+            Console.Write(">");
+            ConsoleKeyInfo keyInfo = Console.ReadKey();
+            char keyChar = keyInfo.KeyChar;
+            ConsoleKey key = keyInfo.Key;
+            switch (keyChar)
+            {
+                case '1':
+                    EditFirstName(count, chosen, ref contestants);
+                    break;
+                case '2':
+                    EditLastName(count, chosen, ref contestants);
+                    break;
+                case '3':
+                    EditInterest(count, chosen, ref contestants);
+                    break;
+                case '4':
+                    ResetScore(count, chosen, ref contestants);
+                    break;
+                case '0':
+                    ContestantMenu(count, contestants);
+                    break;
+                default:
+                    InvalidInput();
+                    ChosenContestant(count, chosen, contestants);
+                    break;
+
+            }
+        }
+        static void ResetScore(int count, int chosen, ref Contestant[] contestants)
+        {
+            contestants[chosen].score = 0;
+            Console.WriteLine();
+            Console.Write("Score reset to 0! ENTER to return");
+            Console.ReadLine();
+            ChosenContestant(count, chosen, contestants);
+        }
+        static void EditInterest(int count, int chosen, ref  Contestant[] contestants)
+        {
+            Console.Clear();
+            Console.WriteLine("!*!*!*!*! Wheel of Fortune Game Show !*!*!*!*!");
+            Console.WriteLine();
+            Console.WriteLine("[ Contestant Menu ] ".PadLeft(15));
+            Console.WriteLine();
+            Console.WriteLine($"Enter new interest or leave blank to return.");
+            Console.WriteLine();
+            Console.WriteLine("Max 30 CHR");
+            Console.WriteLine();
+            Console.Write(">");
+            string newinterest = Console.ReadLine();
+            if (string.IsNullOrWhiteSpace(newinterest))
+            {
+                ChosenContestant(count, chosen, contestants);
+            }
+            else if (newinterest != null && newinterest.Length > 30)
+            {
+                Console.WriteLine();
+                Console.Write("New interest cannot exceed 30 characters. ENTER to return");
+                Console.ReadLine();
+                EditInterest(count, chosen, ref contestants);
+            }
+            else
+            {
+                contestants[chosen].interest = newinterest;
+                ChosenContestant(count, chosen, contestants);
+            }
+        }
+        static void EditFirstName(int count, int chosen, ref Contestant[] contestants)
         {
             Console.Clear();
             Console.WriteLine("!*!*!*!*! Wheel of Fortune Game Show !*!*!*!*!");
@@ -177,7 +256,57 @@ namespace DominikAickenSpinTheWheel
             Console.WriteLine();
             Console.WriteLine($"Enter new first name or leave blank to return.");
             Console.WriteLine();
+            Console.WriteLine("Max 15 CHR");
+            Console.WriteLine();
             Console.Write(">");
+            string newname = Console.ReadLine();
+            if (string.IsNullOrWhiteSpace(newname))
+            {
+                ChosenContestant(count, chosen, contestants);
+            }
+            else if (newname != null && newname.Length > 15)
+            {
+                Console.WriteLine();
+                Console.Write("New first name cannot exceed 15 characters. ENTER to return");
+                Console.ReadLine();
+                EditFirstName(count, chosen, ref contestants);
+            }
+            else
+            {
+                contestants[chosen].firstname = newname;
+                ChosenContestant(count, chosen, contestants);
+            }
+        }
+        static void EditLastName(int count, int chosen, ref Contestant[] contestants)
+        {
+            Console.Clear();
+            Console.WriteLine("!*!*!*!*! Wheel of Fortune Game Show !*!*!*!*!");
+            Console.WriteLine();
+            Console.WriteLine("[ Contestant Menu ] ".PadLeft(15));
+            Console.WriteLine();
+            Console.WriteLine($"Enter new last name or leave blank to return.");
+            Console.WriteLine();
+            Console.WriteLine("Max 25 CHR");
+            Console.WriteLine();
+            Console.Write(">");
+            string newname = Console.ReadLine();
+            if (string.IsNullOrWhiteSpace(newname))
+            {
+                ChosenContestant(count, chosen, contestants);
+            }
+            else if (newname != null && newname.Length > 25)
+            {
+                Console.WriteLine();
+                Console.Write("New last name cannot exceed 25 characters. ENTER to return");
+                Console.ReadLine();
+                EditLastName(count, chosen, ref contestants);
+            }
+            else
+            {
+                contestants[chosen].lastname = newname;
+                ChosenContestant(count, chosen, contestants);
+                BubbleSort(ref contestants, count);
+            }
         }
         static void ShowContestants(int count, Contestant[] contestants)
         {
@@ -186,15 +315,15 @@ namespace DominikAickenSpinTheWheel
             Console.WriteLine();
             Console.WriteLine("[ Contestant Menu ] ".PadLeft(15));
             Console.WriteLine();
-            Console.WriteLine("#  First Name      Last Name                Interest                      Score");
-            Console.WriteLine("--------------------------------------------------------------------------------");
+            Console.WriteLine("#  First Name       Last Name                 Interest                       Score");
+            Console.WriteLine("----------------------------------------------------------------------------------");
             for (int i = 0; i < count; i++)
             {
                 Console.WriteLine(
                     $"{i + 1,-3}" +
-                    $"{contestants[i].firstname,-15} {contestants[i].lastname,-25}" +
-                    $"{contestants[i].interest,-30}" +
-                    $"{contestants[i].score,-5}");
+                    $"{contestants[i].firstname,-16} {contestants[i].lastname,-26}" +
+                    $"{contestants[i].interest,-31}" +
+                    $"{contestants[i].score,-6}");
             }
             Console.WriteLine();
             Console.Write("ENTER to return");
