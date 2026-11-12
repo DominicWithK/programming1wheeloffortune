@@ -84,7 +84,7 @@ namespace DominikAickenSpinTheWheel
             Thread.Sleep(1400);
             Game(count, winningContestant, ref contestants);
         }
-        static int WheelSpin(int winningContestant, Contestant[] contestants)
+        static int WheelSpin()
         {
             Random rand = new Random();
             int[] wheel ={ 5000, 300, 1500, 900,4000, 800, 2500, -2000,600, 3500, 1200, 400,4500, 700, 3000, 1700,500, 2200, -3000, 1000,1800, 750, 2000, 1300 };
@@ -139,7 +139,7 @@ namespace DominikAickenSpinTheWheel
             Thread.Sleep(1400);
             return result;
         }
-        static string WordSelect(int winningContestant, ref Contestant[] contestants)
+        static string WordSelect()
         {
             Random rand = new Random();
             //List of 20 words (with the help of CoPilot):
@@ -205,8 +205,8 @@ namespace DominikAickenSpinTheWheel
         static void Game(int count, int winningContestant, ref Contestant[] contestants)
         {
             int strikes = 0;
-            int result = WheelSpin(winningContestant, contestants);
-            string answer = WordSelect(winningContestant, ref contestants);
+            int result = WheelSpin();
+            string answer = WordSelect();
             char[] alphabet = { 'A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L', 'M', 'N', 'O', 'P', 'Q', 'R', 'S', 'T', 'U', 'V', 'W', 'X', 'Y', 'Z' };
             int total = 0;
             bool solved = false;
@@ -231,7 +231,6 @@ namespace DominikAickenSpinTheWheel
                     int matches = 0;
                     if (guess >= 'A' && guess <= 'Z')
                     {
-
                         if (alphabet[guess - 'A'] == '-')
                         {
                             Console.WriteLine();
@@ -240,7 +239,6 @@ namespace DominikAickenSpinTheWheel
                             Console.WriteLine("ENTER to return");
                             Console.ReadLine();
                         }
-
                         else
                         {
                             for (int i = 0; i < answer.Length; i++)
@@ -278,7 +276,7 @@ namespace DominikAickenSpinTheWheel
                                 }
                                 Console.WriteLine("ENTER to continue");
                                 Console.ReadLine();
-                                result = WheelSpin(winningContestant, contestants);
+                                result = WheelSpin();
                             }
                             //Change total, display win to user.
                             else
@@ -302,7 +300,7 @@ namespace DominikAickenSpinTheWheel
                                     Console.WriteLine();
                                     Console.WriteLine("ENTER to continue");
                                     Console.ReadLine();
-                                    result = WheelSpin(winningContestant, contestants);
+                                    result = WheelSpin();
                                 }
                                 else
                                 {
@@ -311,7 +309,7 @@ namespace DominikAickenSpinTheWheel
                                     Console.WriteLine();
                                     Console.WriteLine("ENTER to continue");
                                     Console.ReadLine();
-                                    result = WheelSpin(winningContestant, contestants);
+                                    result = WheelSpin();
                                 }
                             }
                         }
@@ -364,7 +362,7 @@ namespace DominikAickenSpinTheWheel
                 Console.WriteLine(" *                  *        *                 *                 *           *           *            *");
                 Console.WriteLine("*         *          *               *            *            *              *               *        *");
                 Console.WriteLine();
-                Console.WriteLine($"{total} has been added to your score! New final score: {contestants[winningContestant].score}");
+                Console.WriteLine($"{total:C0} has been added to your score! New final score: {contestants[winningContestant].score:C0}");
             }
             else
             {
@@ -709,6 +707,19 @@ namespace DominikAickenSpinTheWheel
             Console.Write("ENTER to return");
             Console.ReadLine();
             ContestantMenu(count, contestants);
+        }
+        static void SaveContestants(int count, Contestant[] contestants)
+        {
+            using (StreamWriter writer = new StreamWriter("wheelOfFortune.txt"))
+            {
+                for (int i = 0; i < count; i++)
+                {
+                    writer.WriteLine(contestants[i].firstname);
+                    writer.WriteLine(contestants[i].lastname);
+                    writer.WriteLine(contestants[i].interest);
+                    writer.WriteLine(contestants[i].score);
+                }
+            }
         }
         static void InvalidInput()
         {
