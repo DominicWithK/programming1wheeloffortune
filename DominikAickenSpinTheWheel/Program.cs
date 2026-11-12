@@ -102,7 +102,7 @@ namespace DominikAickenSpinTheWheel
                     if (row == 0)
                     {
                         Console.ForegroundColor = ConsoleColor.Yellow;      //Color in the prize the arrow points to
-                        Console.WriteLine($"   > ${wheel[index],-5} < ");
+                        Console.WriteLine($"   > {wheel[index],-7:C0} < ");
                         Console.ResetColor();
                     }
                     else
@@ -324,6 +324,8 @@ namespace DominikAickenSpinTheWheel
                         strikes++;
                         if (strikes < 3)
                         {
+                            GameScreen(player, contestants, result, total, spacing, alphabet, blank, strikes);
+                            Console.Write($">{input}");
                             Console.WriteLine();
                             Console.WriteLine("You guessed incorrectly!");
                             Console.WriteLine();
@@ -470,7 +472,7 @@ namespace DominikAickenSpinTheWheel
                 "\nIf you guess a letter correctly, your prize is multiplied by the amount of times the guessed letter appears in the word." +
                 "\nIf you guess a vowel, your winnings is reduced by a flat rate of $250." +
                 "\nIf you guess a letter the word does not contain, you will lose your current spin's prize and spin again." +
-                "\nIf you enter the entire word early, you will not receive anymore spins, but you will not be penalized by vowels." +
+                "\nIf you enter the entire word early, you will not receive anymore spins, but you will not be penalized by vowels and still receive that spin's prize!." +
                 "\nYou only have 3 chances to enter the complete word, if you run out of chances you lose and the game will be over!" +
                 "\n\nKeep spinning until the word is complete!");
             Console.WriteLine();
@@ -749,5 +751,5 @@ namespace DominikAickenSpinTheWheel
     }
 }
 //KNOWN BUGS: If two contestants have the exact same first and last name, searching for them becomes impossible until you change the names of one. Trying to input words/characters during an animation may cause issues.
-//EXTRA FEATURES: Editable first/last name (restricted with a character limit, as well as editable interest), resettable score and instructions. Player can guess the full word to end the game early, with a strike system to punish incorrect guesses.
+//EXTRA FEATURES: Editable first/last name (restricted with a character limit, as well as editable interest), resettable score and instructions. Player can guess the full word to end the game early, with a strike system to punish incorrect guesses which can be used to escape vowel penalties.
 //NOTE: 'count' is left over from a extra feature I planned to add where you could add contestants in-game. 'using' streamwriter was a solution to crashes regarding saving contestants I found on google.
