@@ -1,4 +1,5 @@
 ﻿using Microsoft.VisualBasic;
+using System.IO;
 
 namespace DominikAickenSpinTheWheel
 {
@@ -14,19 +15,19 @@ namespace DominikAickenSpinTheWheel
         static Random rand = new Random();      //Set up random variable
         static void Main(string[] args)
         {
+            int count = 23;
+            StreamReader sr = new StreamReader("wheelOfFortune.txt");
             //Assign contestants
             Contestant[] contestants = new Contestant[23];
-            int count = 0;
-            using (StreamReader reader = new StreamReader("wheelOfFortune.txt"))
             {
-                while (!reader.EndOfStream)
+                for (int i = 0; i < contestants.Length; i++)
                 {
-                    contestants[count].firstname = reader.ReadLine().Trim();
-                    contestants[count].lastname = reader.ReadLine().Trim();
-                    contestants[count].interest = reader.ReadLine().Trim();
-                    contestants[count].score = Convert.ToInt32(reader.ReadLine().Trim());
-                    count++;
+                    contestants[i].firstname = sr.ReadLine();
+                    contestants[i].lastname = sr.ReadLine();
+                    contestants[i].interest = sr.ReadLine();
+                    contestants[i].score = Convert.ToInt32(sr.ReadLine());
                 }
+                sr.Close();
             }
             BubbleSort(ref contestants, count);
             //Start with main menu
@@ -125,7 +126,7 @@ namespace DominikAickenSpinTheWheel
             }
             Thread.Sleep(700);
             Console.Clear();
-            Console.WriteLine($"WHEEL RESULT: ${result}");
+            Console.WriteLine($"WHEEL RESULT: ${result}:0C");
             Console.ResetColor();
             Thread.Sleep(2000);
             return result;
@@ -729,16 +730,15 @@ namespace DominikAickenSpinTheWheel
         }
         static void SaveContestants(int count, Contestant[] contestants)
         {
-            using (StreamWriter writer = new StreamWriter("wheelOfFortune.txt"))
+            StreamWriter sw = new StreamWriter("wheelOfFortune.txt");
+            for (int i = 0; i < count; i++)
             {
-                for (int i = 0; i < count; i++)
-                {
-                    writer.WriteLine(contestants[i].firstname);
-                    writer.WriteLine(contestants[i].lastname);
-                    writer.WriteLine(contestants[i].interest);
-                    writer.WriteLine(contestants[i].score);
-                }
+                sw.WriteLine(contestants[i].firstname);
+                sw.WriteLine(contestants[i].lastname);
+                sw.WriteLine(contestants[i].interest);
+                sw.WriteLine(contestants[i].score);
             }
+            sw.Close();
         }
         static void InvalidInput()
         {
@@ -752,4 +752,4 @@ namespace DominikAickenSpinTheWheel
 }
 //KNOWN BUGS: If two contestants have the exact same first and last name, searching for them becomes impossible until you change the names of one. Trying to input words/characters during an animation may cause issues.
 //EXTRA FEATURES: Editable first/last name (restricted with a character limit, as well as editable interest), resettable score and instructions. Player can guess the full word to end the game early, with a strike system to punish incorrect guesses which can be used to escape vowel penalties.
-//NOTE: 'count' is left over from a extra feature I planned to add where you could add contestants in-game. 'using' streamwriter was a solution to crashes regarding saving contestants I found on google.
+//NOTE: 'count' is left over from an extra feature I planned to add where you could add contestants in-game, I didn't add this in the end and cleaning it out of the code was not worth the time.
