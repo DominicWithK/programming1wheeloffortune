@@ -13,6 +13,13 @@ namespace DominikAickenSpinTheWheel
     }
     public class Program
     {
+
+
+
+        // >>> BUGS, EXTRA FEATURES AND NOTES AT BOTTOM OF CODE <<<
+
+
+
         static Random rand = new Random();      //Set up random variable to use across all methods
         static void Main(string[] args)
         {
