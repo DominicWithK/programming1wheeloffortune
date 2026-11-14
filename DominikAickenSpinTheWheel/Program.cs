@@ -430,7 +430,7 @@ namespace DominikAickenSpinTheWheel
                 Console.WriteLine();
                 Console.WriteLine("[ Main Menu ] ".PadLeft(15));
                 Console.WriteLine();
-                Console.WriteLine("1. Play\n2. Instructions\n3. Contestants\n0. Quit");
+                Console.WriteLine("1. Play\n2. Instructions\n3. Contestants\n4. Leaderboard\n0. Quit");
                 Console.WriteLine();
                 Console.Write(">");
                 //Read key pressed, this means the user doesn't have to press enter again
@@ -447,6 +447,9 @@ namespace DominikAickenSpinTheWheel
                     case '3':
                         ContestantMenu(count, contestants);
                         break;
+                    case '4':
+                        Leaderboard(contestants, count);
+                        break;
                     case '0':
                         Console.WriteLine();
                         Console.WriteLine("Thank you for playing!");
@@ -456,6 +459,44 @@ namespace DominikAickenSpinTheWheel
                     default:
                         InvalidInput();
                         break;
+                }
+            }
+        }
+        static void Leaderboard(Contestant[] contestants, int count)
+        {
+            Console.Clear();
+            Console.WriteLine("!*!*!*!*! Wheel of Fortune Game Show !*!*!*!*!");
+            Console.WriteLine();
+            Console.WriteLine("[ Main Menu ] ".PadLeft(15));
+            Console.WriteLine();
+            Console.WriteLine("#  First Name       Last Name                 Interest                       Bank");
+            Console.WriteLine("-------------------------------------------------------------------------------------");
+            ScoreSort(ref contestants, count);
+            for (int i = 0; i < 5; i++)
+            {
+                Console.WriteLine(
+                    $"{i + 1,-3}" +
+                    $"{contestants[i].firstname,-16} {contestants[i].lastname,-26}" +
+                    $"{contestants[i].interest,-31}" +
+                    $"{contestants[i].score,-7:C0}");
+            }
+            BubbleSort(ref contestants, count);
+            Console.WriteLine();
+            Console.Write("ENTER to return");
+            Console.ReadLine();
+        }
+        static void ScoreSort(ref Contestant[] contestants, int count)     //Sorts by score for leaderboard
+        {
+            for (int i = 0; i < count - 1; i++)
+            {
+                for (int j = 0; j < count - 1 - i; j++)
+                {
+                    if (contestants[j].score.CompareTo(contestants[j + 1].score) < 0)
+                    {
+                        Contestant temp = contestants[j];
+                        contestants[j] = contestants[j + 1];
+                        contestants[j + 1] = temp;
+                    }
                 }
             }
         }
@@ -715,7 +756,7 @@ namespace DominikAickenSpinTheWheel
             Console.WriteLine("[ Contestant Menu ] ".PadLeft(15));
             Console.WriteLine();
             Console.WriteLine("#  First Name       Last Name                 Interest                       Bank");
-            Console.WriteLine("---------------------------------------------------------------------------------");
+            Console.WriteLine("-------------------------------------------------------------------------------------");
             for (int i = 0; i < count; i++)             //Writes out contestants
             {
                 Console.WriteLine(
