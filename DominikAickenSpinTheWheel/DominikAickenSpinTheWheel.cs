@@ -11,7 +11,7 @@ namespace DominikAickenSpinTheWheel
         public string interest;
         public int score;
     }
-    public class Program
+    public class DominikAickenSpinTheWheel
     {
 
 
