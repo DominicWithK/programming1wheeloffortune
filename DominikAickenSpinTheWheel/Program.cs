@@ -13,7 +13,7 @@ namespace DominikAickenSpinTheWheel
     }
     public class Program
     {
-        static Random rand = new Random();      //Set up random variable
+        static Random rand = new Random();      //Set up random variable to use across all methods
         static void Main(string[] args)
         {
             int count = 23;
@@ -109,15 +109,17 @@ namespace DominikAickenSpinTheWheel
                     }
                     else
                     {
-                        Console.WriteLine($"     ${wheel[index]}");         //Static
+                        Console.WriteLine($"     {wheel[index]:C0}");         //Static
                     }
                 }
                 Thread.Sleep(delay);
                 if (delay < 160)
+                {
                     delay += 6;         //Delay increases to make the wheel look like it's slowing down
+                }
             }
             int result = wheel[prize];
-            if (result > 0) //Good prze
+            if (result > 0) //Good prize
             { 
                 Console.ForegroundColor = ConsoleColor.Green; 
             }
@@ -127,7 +129,7 @@ namespace DominikAickenSpinTheWheel
             }
             Thread.Sleep(700);
             Console.Clear();
-            Console.WriteLine($"WHEEL RESULT: ${result}:0C");
+            Console.WriteLine($"WHEEL RESULT: {result:C0}");
             Console.ResetColor();
             Thread.Sleep(2000);
             return result;
