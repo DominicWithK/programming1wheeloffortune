@@ -1,6 +1,7 @@
 ﻿using Microsoft.VisualBasic;
 using System.IO;
 
+
 namespace DominikAickenSpinTheWheel
 {
     public struct Contestant            //Structure for contestants
@@ -17,7 +18,7 @@ namespace DominikAickenSpinTheWheel
         {
             int count = 23;
             StreamReader sr = new StreamReader("wheelOfFortune.txt");
-            //Assign contestants
+            //Populate array
             Contestant[] contestants = new Contestant[23];
             {
                 for (int i = 0; i < contestants.Length; i++)
@@ -182,6 +183,7 @@ namespace DominikAickenSpinTheWheel
             bool failed = false;
             char[] blank = new char[answer.Length];
             int spacing = (41 - blank.Length) / 2;
+            //Blank all letters
             for (int i = 0; i < blank.Length; i++)
             {
                 blank[i] = '_';
@@ -198,8 +200,10 @@ namespace DominikAickenSpinTheWheel
                 {
                     char guess = trueinput[0];
                     int matches = 0;
+                    //Between A-Z
                     if (guess >= 'A' && guess <= 'Z')
                     {
+                        //Check for duplicates
                         if (alphabet[guess - 'A'] == '-')
                         {
                             Console.WriteLine();
@@ -210,8 +214,10 @@ namespace DominikAickenSpinTheWheel
                         }
                         else
                         {
+                            //Check if word has letter (user's 'guess')
                             for (int i = 0; i < answer.Length; i++)
                             {
+                                //Set blank letters to unhidden after correct guess and add to matches
                                 if (answer[i] == guess)
                                 {
                                     blank[i] = guess;
@@ -219,7 +225,7 @@ namespace DominikAickenSpinTheWheel
                                 }
                             }
                             alphabet[guess - 'A'] = '-';      //Changes the used letter to a '-'
-                            if ("AEIOU".Contains(guess))        //Checks for A, E, I, O, U
+                            if ("AEIOU".Contains(guess))        //Checks for vowels - A, E, I, O, U
                             {
                                 total -= 250;           //$250 penalty
                                 solved = true;
@@ -247,18 +253,19 @@ namespace DominikAickenSpinTheWheel
                                         Console.WriteLine($"Better luck next time! The word does not have that letter.");
                                         Console.WriteLine();
                                     }
-                                    if (result >= 1000)         //If prize is large
+                                    if (result >= 1000)         //TIP FOR PLAYER IF GUESS VOWEL ON A LARGE SPIN
                                     {
                                         Console.WriteLine("TIP: guess vowels when spinning a low prize.");
                                         Console.WriteLine();
                                     }
                                     Console.Write("ENTER to continue");
                                     Console.ReadLine();
-                                    result = WheelSpin();       //Respin for prize
+                                    result = WheelSpin();
                                 }
                             }
                             else             //Not a vowel:
                             {
+                                //Correct
                                 if (matches > 0)
                                 {
                                     total += (result * matches);        //Multiply per occurence
@@ -279,6 +286,7 @@ namespace DominikAickenSpinTheWheel
                                         {
                                             Console.WriteLine($"Congratulations, you guessed {matches} letter(s) correctly! {(result * matches):C0} was added to your winnings.");
                                         }
+                                        //TIP FOR PLAYER IF GUESS CORRECT ON A PENALTY
                                         else
                                         {
                                             Console.WriteLine($"You guessed {matches} letter(s) correctly and lost {(result * matches) * -1:C0}.");
@@ -320,6 +328,7 @@ namespace DominikAickenSpinTheWheel
                             blank[i] = answer[i];
                         }
                     }
+                    //If user guesses full word incorrectly
                     else
                     {
                         strikes++;
@@ -362,7 +371,7 @@ namespace DominikAickenSpinTheWheel
                 {
                     result = 0;
                     int temp = total;
-                    if (total > 0) { total = 0; }
+                    if (total > 0) { total = 0; }       //For screen redraws
                     GameScreen(player, contestants, result, total, spacing, alphabet, blank, strikes);
                     Console.Write($">{input}");
                     Console.WriteLine();
@@ -433,9 +442,9 @@ namespace DominikAickenSpinTheWheel
                 Console.WriteLine("1. Play\n2. Instructions\n3. Contestants\n4. Leaderboard\n0. Quit");
                 Console.WriteLine();
                 Console.Write(">");
-                //Read key pressed, this means the user doesn't have to press enter again
-                ConsoleKeyInfo keyInfo = Console.ReadKey();
-                char keyChar = keyInfo.KeyChar;
+                //Read key pressed, this means the user doesn't have to press enter - solution found on Google
+                ConsoleKeyInfo keyInfo = Console.ReadKey();     //ConsoleKeyInfo = struct available in System namespace
+                char keyChar = keyInfo.KeyChar;                 //Convert keyInfo to a usable char (named 'keyChar')
                 switch (keyChar)
                 {
                     case '1':
@@ -792,5 +801,5 @@ namespace DominikAickenSpinTheWheel
     }
 }
 //KNOWN BUGS: If two contestants have the exact same first and last name, searching for them becomes impossible until you change the names of one. Trying to input words/characters during an animation may cause issues.
-//EXTRA FEATURES: Editable first/last name (restricted with a character limit, as well as editable interest), resettable score and instructions. Player can guess the full word to end the game early, with a strike system to punish incorrect guesses which can be used to escape vowel penalties.
+//EXTRA FEATURES: Editable first/last name (restricted with a character limit, as well as editable interest), resettable score and instructions. Player can guess the full word to end the game early, with a strike system to punish incorrect guesses which can be used to escape vowel penalties. Tips shown to user in specific scenarios (Guessing a vowel with a high spin, guessing a correct letter with a penalty spin)
 //NOTE: 'count' is left over from an extra feature I planned to add where you could add contestants in-game, I didn't add this in the end and cleaning it out of the code was not worth the time.
